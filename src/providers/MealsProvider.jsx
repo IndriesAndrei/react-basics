@@ -16,6 +16,7 @@ const MealsProvider = ({children}) => {
     )
 }
 
+// components to wire to the context (custom hook here)
 export const useMealsListContext = () => React.useContext(MealsContext);
 
 export default MealsProvider;

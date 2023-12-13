@@ -16,6 +16,7 @@ import ReactPlayer from 'react-player' //for videos
 
 // import images 
 import myImage from './assets/react.svg'
+import UserProvider, { useUser } from './providers/UserContext'
 
 // we use useReducer and here we make the reducer (kind of useState with super powers)
 const reducer = (state, action) => {
@@ -49,8 +50,45 @@ const data = [
   }
 ];
 
+const LoggedInUser = () => {
+  // get the context data from UserContext
+  const {user} = useUser();
+
+  return (
+    <p>
+      Hello <span>{user.name}</span>
+    </p>
+  )
+};
+
+const HeaderNew = () => {
+  return (
+    <header>
+      <h2>Blog App</h2>
+      <LoggedInUser />
+    </header>
+  )
+};
+
+const Page = () => {
+  // get the context data from UserContext
+  const {user} = useUser();
+
+  return (
+    <div>
+      <h2>What is lorem ipsum?</h2>
+      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</p>
+      <p>Written by: {user.name}</p>
+    </div>
+  )
+};
+
 function App() {
   const [word, setWord] = useState('Eat');
+  const [name, setName] = useState('');
+  const [score, setScore] = useState(10);
+  const [comment, setComment] = useState('');
+
   const initialState = {money: 100};
   const randomImageUrl = "https://picsum.photos/400/265";
   const vidUrl = "https://www.facebook.com/facebook/videos/10153231379946729/";
@@ -66,6 +104,24 @@ function App() {
     const itemText = `${dessert.title} - ${dessert.description}`;
     return <li key={dessert.id}>{itemText} - {dessert.price}</li>
   })
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setName('');
+    console.log('Submitted');
+  }
+
+  function handleSubmitComment(e) {
+    e.preventDefault();
+    if (Number(score) <= 5 && comment.length <= 10) {
+      alert("Please provide a comment explaining why the experience was poor.");
+      return;
+    }
+    
+    console.log("Form submitted!");
+    setComment("");
+    setScore(10);
+  }
 
   return (
     <>
@@ -86,6 +142,56 @@ function App() {
       <ul>{topDesserts}</ul>
       <hr />
       {/* lists end */}
+
+      {/* forms in React */}
+      <form onSubmit={handleSubmit}>
+        <fieldset>
+          <div className='Field'>
+            <label htmlFor='name'>Name:</label>
+            <input 
+              id="name"
+              type="text" 
+              placeholder="Name" 
+              name="name" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+            />
+          </div>
+          <button disabled={!name} type="submit">Submit</button>
+        </fieldset>
+      </form>
+
+      <hr />
+      <form onSubmit={handleSubmitComment}>
+        <fieldset>
+          <h2>Feedback form</h2>
+          <div className='Field'>
+            <label htmlFor="score">Score: {score} ⭐</label>
+            <input 
+              type="range" 
+              name="score" 
+              id="score" 
+              min="0" 
+              max="10" 
+              value={score} 
+              onChange={(e) => setScore(e.target.value)}
+            />
+          </div>
+          <div className='Field'>
+            <label>Comment:</label>
+            <textarea 
+              name="" 
+              id="" 
+              cols="30" 
+              rows="5" 
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            ></textarea>
+          </div>
+          <button type="submit">Submit</button>
+        </fieldset>
+      </form>
+      {/* forms in React end */}
 
       {/* Ways of importing images */}
       <img height="100" src={myImage} alt="React Logo Image" /> 
@@ -120,6 +226,13 @@ function App() {
         <MealsList />
         <Counter />
       </MealsProvider>
+
+      <hr />
+      <UserProvider>
+        <HeaderNew />
+        <Page />
+      </UserProvider>
+
       {/* Context API example end */}
     </>
   )
