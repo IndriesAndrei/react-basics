@@ -24,6 +24,31 @@ const reducer = (state, action) => {
   return new Error();
 }
 
+// lists
+const data = [
+  {
+    id: "1",
+    title: "Tiramisu",
+    description: "The best tiramisu in town",
+    image: "https://picsum.photos/200/300/?random",
+    price: "$5.00"
+  },
+  {
+    id: "2",
+    title: "Lemon Ice Cream",
+    description: "Mind blowing taste",
+    image: "https://picsum.photos/200/300/?random",
+    price: "$3.50"
+  },
+  {
+    id: "3",
+    title: "Chocolate mousse",
+    description: "Unexplored flavour",
+    image: "https://picsum.photos/200/300/?random",
+    price: "$6.00"
+  }
+];
+
 function App() {
   const [word, setWord] = useState('Eat');
   const initialState = {money: 100};
@@ -37,6 +62,11 @@ function App() {
     setWord('Drink');
   }
 
+  const topDesserts = data.map(dessert => {
+    const itemText = `${dessert.title} - ${dessert.description}`;
+    return <li key={dessert.id}>{itemText} - {dessert.price}</li>
+  })
+
   return (
     <>
       {/* React Router example */}
@@ -49,6 +79,13 @@ function App() {
         <Route path='/about-me' element={<AboutMe />} />
       </Routes>
       {/* React Router example end */}
+
+      <hr />
+      {/* lists */}
+      <h2>Top Desserts</h2>
+      <ul>{topDesserts}</ul>
+      <hr />
+      {/* lists end */}
 
       {/* Ways of importing images */}
       <img height="100" src={myImage} alt="React Logo Image" /> 
