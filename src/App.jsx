@@ -12,6 +12,10 @@ import Counter from './components/Counter'
 import { Link, Route, Routes } from 'react-router-dom'
 import Homepage from './Homepage'
 import AboutMe from './AboutMe'
+import ReactPlayer from 'react-player' //for videos
+
+// import images 
+import myImage from './assets/react.svg'
 
 // we use useReducer and here we make the reducer (kind of useState with super powers)
 const reducer = (state, action) => {
@@ -23,6 +27,8 @@ const reducer = (state, action) => {
 function App() {
   const [word, setWord] = useState('Eat');
   const initialState = {money: 100};
+  const randomImageUrl = "https://picsum.photos/400/265";
+  const vidUrl = "https://www.facebook.com/facebook/videos/10153231379946729/";
 
   // useReducer() gets a reducer and an initial State
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -30,7 +36,6 @@ function App() {
   function handleClick() {
     setWord('Drink');
   }
-
 
   return (
     <>
@@ -44,6 +49,16 @@ function App() {
         <Route path='/about-me' element={<AboutMe />} />
       </Routes>
       {/* React Router example end */}
+
+      {/* Ways of importing images */}
+      <img height="100" src={myImage} alt="React Logo Image" /> 
+      {/* <img height="50" src={require("./assets/react.svg")} alt="React Logo" /> */}
+      <img height="100" src={randomImageUrl} alt="My random image" />
+      {/* Ways of importing images end */}
+
+      {/* Videos in React with react-player library example */}
+      <ReactPlayer url={vidUrl} playing={false} volume={0.5} />
+      {/* Videos in React with react-player library example end */}
 
       <Header name="Anna" color="purple" />
       <Main greet="Howdy" />
