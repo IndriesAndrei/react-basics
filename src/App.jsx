@@ -94,8 +94,9 @@ function App() {
   const [restaurantName, setRestaurantName] = useState('Lemon');
   const [toggle, setToggle] = useState(false);
   
-  // fetch from BASE_URL API
+  // fetch from BASE_URL API and another API
   const [countries, setCountries] = useState([]);
+  const [user, setUser] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,6 +108,17 @@ function App() {
     fetchData();
   }, []);
   console.log(countries);
+
+
+  const fetchData = () => {
+    fetch( "https://randomuser.me/api/?results=1")
+      .then(response => response.json())
+      .then(data => setUser(data));
+    }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   // fetch from BASE_URL API end
 
   const initialState = {money: 100};
@@ -259,6 +271,9 @@ function App() {
       <button onClick={handleClick}>Change text</button>
 
       {/* fetch data from BASE_URL and list it */}
+      <hr />
+      <h2>First Name: {user.results[0].name.first}</h2>
+      <h2>Last Name: {user.results[0].name.last}</h2>
       <hr />
         {countries.map((country) => {
           return <p key={country.name.common}>{country.name.common} - {country.capital}</p>
