@@ -25,6 +25,14 @@ const reducer = (state, action) => {
   return new Error();
 }
 
+// we can define our own types
+const reducerRestaurant = (stateRestaurant, action) => {
+  if (action.type === 'buy_ingredients') return {moneyRestaurant: stateRestaurant.moneyRestaurant - 10};
+  if (action.type === 'sell_a_meal') return {moneyRestaurant: stateRestaurant.moneyRestaurant + 10};
+  if (action.type === 'celebrity_visit') return {moneyRestaurant: stateRestaurant.moneyRestaurant + 3000};
+  return stateRestaurant;
+}
+
 // lists
 const data = [
   {
@@ -109,7 +117,6 @@ function App() {
   }, []);
   console.log(countries);
 
-
   const fetchData = () => {
     fetch( "https://randomuser.me/api/?results=1")
       .then(response => response.json())
@@ -120,17 +127,19 @@ function App() {
     fetchData();
   }, []);
   // fetch from BASE_URL API end
+  
+  const vidUrl = "https://www.facebook.com/facebook/videos/10153231379946729/";
+  const randomImageUrl = "https://picsum.photos/400/265";
 
   const initialState = {money: 100};
-  const randomImageUrl = "https://picsum.photos/400/265";
-  const vidUrl = "https://www.facebook.com/facebook/videos/10153231379946729/";
-
   // useReducer() gets a reducer and an initial State
   const [state, dispatch] = useReducer(reducer, initialState);
-
   function handleClick() {
     setWord('Drink');
   }
+
+  const initialStateRestaurant = {moneyRestaurant: 100};
+  const [stateRestaurant, dispatchRestaurant] = useReducer(reducerRestaurant, initialStateRestaurant);
 
   const topDesserts = data.map(dessert => {
     const itemText = `${dessert.title} - ${dessert.description}`;
@@ -271,14 +280,14 @@ function App() {
       <button onClick={handleClick}>Change text</button>
 
       {/* fetch data from BASE_URL and list it */}
-      <hr />
+      {/* <hr />
       <h2>First Name: {user.results[0].name.first}</h2>
       <h2>Last Name: {user.results[0].name.last}</h2>
       <hr />
         {countries.map((country) => {
           return <p key={country.name.common}>{country.name.common} - {country.capital}</p>
         })}
-      <hr />
+      <hr /> */}
       {/* fetch data from BASE_URL and list it end */}
 
 
@@ -288,7 +297,16 @@ function App() {
         <button onClick={() => dispatch({type: 'ride'})}>A new customer!</button>
         <button onClick={() => dispatch({type: 'fuel'})}>Refill the tank!</button>
       </div>
-       {/* useReducer example end */}
+
+      <hr />
+      <h1>Wallet Restaurant: {stateRestaurant.moneyRestaurant}</h1>
+      <div>
+        <button onClick={() => dispatchRestaurant({type: 'buy_ingredients'})}>Shopping for veggies!</button>
+        <button onClick={() => dispatchRestaurant({type: 'sell_a_meal'})}>Serve a meal to the customer!</button>
+        <button onClick={() => dispatchRestaurant({type: 'celebrity_visit'})}>Celebrity price!</button>
+      </div>
+      
+      {/* useReducer example end */}
 
       {/* Context API example */}
       <MealsProvider>
