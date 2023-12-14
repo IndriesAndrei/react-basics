@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react'
+import { useState, useReducer, useEffect } from 'react'
 import './App.css'
 import Button from './components/Button'
 import Child from './components/Child'
@@ -83,11 +83,31 @@ const Page = () => {
   )
 };
 
+// get countries list from API
+const BASE_URL = " https://restcountries.com/v3.1";
+
 function App() {
   const [word, setWord] = useState('Eat');
   const [name, setName] = useState('');
   const [score, setScore] = useState(10);
   const [comment, setComment] = useState('');
+  const [restaurantName, setRestaurantName] = useState('Lemon');
+  const [toggle, setToggle] = useState(false);
+  
+  // fetch from BASE_URL API
+  const [countries, setCountries] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetch(`${BASE_URL}/all`);
+      const parsedData = await data.json();
+      setCountries(parsedData);
+    }
+
+    fetchData();
+  }, []);
+  console.log(countries);
+  // fetch from BASE_URL API end
 
   const initialState = {money: 100};
   const randomImageUrl = "https://picsum.photos/400/265";
@@ -123,6 +143,19 @@ function App() {
     setScore(10);
   }
 
+  function updateRestaurantName() {
+    setRestaurantName("Little Lemon");
+  }
+
+  const clickHandler = () => {
+    setToggle(!toggle);
+  }
+
+  // change the document title with useEffect
+  useEffect(() => {
+    document.title = toggle ? "Welcome to Little Lemon" : "Using the useEffect hook";
+  }, [toggle]); // will be invoked only once if the dependency array is empty [], if we want to cre-run every time the toggle state changed we put [toggle]
+
   return (
     <>
       {/* React Router example */}
@@ -135,6 +168,9 @@ function App() {
         <Route path='/about-me' element={<AboutMe />} />
       </Routes>
       {/* React Router example end */}
+
+      <h1>{restaurantName}</h1>
+      <button onClick={updateRestaurantName}>Update restaurant name</button>
 
       <hr />
       {/* lists */}
@@ -193,6 +229,16 @@ function App() {
       </form>
       {/* forms in React end */}
 
+      <hr />
+
+      {/* useEffect example */}
+      <h1>Using the useEffect hook</h1>
+      <button onClick={clickHandler}>Toggle message</button>
+      {toggle && <h2>Welcome to Little Lemon</h2>}
+      {/* useEffect example end */}
+
+      <hr />
+
       {/* Ways of importing images */}
       <img height="100" src={myImage} alt="React Logo Image" /> 
       {/* <img height="50" src={require("./assets/react.svg")} alt="React Logo" /> */}
@@ -211,6 +257,14 @@ function App() {
 
       <Child message={word + " at Little Lemon"} />
       <button onClick={handleClick}>Change text</button>
+
+      {/* fetch data from BASE_URL and list it */}
+      <hr />
+        {countries.map((country) => {
+          return <p key={country.name.common}>{country.name.common} - {country.capital}</p>
+        })}
+      <hr />
+      {/* fetch data from BASE_URL and list it end */}
 
 
       {/* useReducer example */}
